@@ -183,3 +183,35 @@
     linear-gradient(180deg, oklch(0.18 0.02 60), oklch(0.1 0.01 60));
   --shadow-menu: 0 24px 60px -24px oklch(0 0 0 / 80%);
 }
+
+/* ===== Main menu (key-art) tokens ===== */
+:root {
+  --menu-title-hot: oklch(0.86 0.19 78);
+  --menu-title-mid: oklch(0.68 0.22 45);
+  --menu-title-deep: oklch(0.52 0.21 30);
+  --gradient-title: linear-gradient(
+    175deg,
+    var(--menu-title-hot) 0%,
+    var(--menu-title-mid) 45%,
+    var(--menu-title-deep) 100%
+  );
+  --gradient-menu-scrim: linear-gradient(
+      90deg,
+      oklch(0.08 0.01 60 / 92%) 0%,
+      oklch(0.08 0.01 60 / 72%) 34%,
+      oklch(0.08 0.01 60 / 12%) 62%,
+      transparent 100%
+    ),
+    linear-gradient(0deg, oklch(0.06 0.01 60 / 88%) 0%, transparent 45%);
+  --gradient-rail: linear-gradient(
+    90deg,
+    oklch(0.09 0.01 60 / 95%),
+    oklch(0.09 0.01 60 / 55%)
+  );
+  --shadow-title: 0 0 34px color-mix(in oklab, var(--hud-accent) 45%, transparent);
+  --shadow-menu-item: 0 2px 18px oklch(0 0 0 / 85%);
+}
+
+@theme inline {
+  --color-menu-title-hot: var(--menu-title-hot);
+}
