@@ -173,7 +173,7 @@ function WeaponRow({
 }
 
 export function MainMenu({ onDeploy }: { onDeploy: () => void }) {
-  const [tab, setTab] = useState<Tab>("play");
+  const [tab, setTab] = useState<Tab | null>(null);
   const { start, settings, updateSettings, resetSettings, loadout, setLoadout, stats, resetStats } =
     useGame();
 
@@ -188,58 +188,147 @@ export function MainMenu({ onDeploy }: { onDeploy: () => void }) {
   const set = <K extends keyof Settings>(key: K, value: Settings[K]) =>
     updateSettings({ [key]: value } as Partial<Settings>);
 
+  const rank = Math.min(99, 1 + Math.floor(stats.kills / 5));
+  const progress = ((stats.kills % 5) / 5) * 100;
+
   return (
-    <div
-      className="pointer-events-auto absolute inset-0 flex items-center justify-center px-6 py-8 font-hud"
-      style={{ background: "var(--gradient-menu), var(--menu-bg)" }}
-    >
+    <div className="pointer-events-auto absolute inset-0 overflow-hidden font-hud">
+      {/* key art */}
+      <img
+        src={menuHero}
+        alt="Ruined city skyline at sunset with an armored operator standing on rubble"
+        width={1920}
+        height={1088}
+        className="absolute inset-0 h-full w-full object-cover object-right"
+      />
       <div
-        className="grid h-full max-h-[46rem] w-full max-w-6xl grid-rows-[auto_1fr] gap-6 rounded-md border border-hud-dim/20 p-8 backdrop-blur-md md:grid-rows-1 md:grid-cols-[19rem_1fr]"
-        style={{ background: "var(--menu-panel)", boxShadow: "var(--shadow-menu)" }}
+        className="absolute inset-0"
+        style={{ background: "var(--gradient-menu-scrim)" }}
+      />
+
+      {/* left icon rail */}
+      <div
+        className="absolute inset-y-0 left-0 z-20 flex w-14 flex-col items-center gap-6 border-r border-hud-accent/15 py-5"
+        style={{ background: "var(--gradient-rail)" }}
       >
-        {/* left column: brand + nav */}
-        <div className="flex flex-col">
-          <div>
-            <h1 className="text-5xl font-black uppercase leading-none tracking-[0.12em] text-hud-accent">
-              Dust Protocol
-            </h1>
-            <p className="mt-2 text-[10px] uppercase tracking-[0.4em] text-hud-dim">
-              Scrapyard Protocol · v1.0
-            </p>
-          </div>
-
-          <nav className="mt-8 flex flex-col gap-1.5">
-            {TABS.map((t) => {
-              const active = t.id === tab;
-              return (
-                <button
-                  key={t.id}
-                  onClick={() => setTab(t.id)}
-                  className={`group flex items-center gap-3 rounded-sm border-l-2 px-4 py-3 text-left transition-colors ${
-                    active
-                      ? "border-hud-accent bg-hud-accent/15"
-                      : "border-transparent hover:border-hud-accent/50 hover:bg-black/25"
-                  }`}
-                >
-                  <span
-                    className={`text-sm font-bold uppercase tracking-[0.24em] ${
-                      active ? "text-hud-fg" : "text-hud-dim group-hover:text-hud-fg"
-                    }`}
-                  >
-                    {t.label}
-                  </span>
-                </button>
-              );
-            })}
-          </nav>
-
-          <div className="mt-auto hidden pt-6 text-[10px] uppercase tracking-[0.28em] text-hud-dim md:block">
-            {TABS.find((t) => t.id === tab)?.hint}
-          </div>
+        <MenuIcon className="size-5 text-hud-dim" />
+        <div className="mt-6 flex flex-1 flex-col items-center gap-6">
+          {[Home, Volume2, Music, MessageSquare, SettingsIcon].map((Icon, i) => (
+            <button
+              key={i}
+              onClick={() => setTab(i === 4 ? "settings" : null)}
+              aria-label="Menu shortcut"
+              className={`relative flex size-9 items-center justify-center transition-colors ${
+                i === 0 ? "text-hud-accent" : "text-hud-dim hover:text-hud-fg"
+              }`}
+            >
+              {i === 0 && (
+                <span className="absolute -left-3 h-7 w-0.5 bg-hud-accent" aria-hidden />
+              )}
+              <Icon className="size-5" />
+            </button>
+          ))}
         </div>
+        <button
+          onClick={() => setTab(null)}
+          aria-label="Exit menu"
+          className="text-hud-dim transition-colors hover:text-hud-health"
+        >
+          <LogOut className="size-5" />
+        </button>
+      </div>
 
-        {/* right column: panel */}
-        <div className="min-h-0 rounded-sm border border-hud-dim/15 bg-black/25 p-6">
+      {/* top-right utility icons */}
+      <div className="absolute right-6 top-5 z-20 flex items-center gap-5">
+        <BarChart3 className="size-5 text-hud-dim" />
+        <button
+          onClick={() => setTab("settings")}
+          aria-label="Settings"
+          className="text-hud-dim transition-colors hover:text-hud-accent"
+        >
+          <SettingsIcon className="size-5" />
+        </button>
+      </div>
+
+      {/* title */}
+      <h1 className="absolute left-1/2 top-6 z-10 -translate-x-1/2 text-center text-5xl font-black uppercase leading-none tracking-[0.06em] md:text-7xl">
+        <span
+          className="bg-clip-text text-transparent"
+          style={{
+            backgroundImage: "var(--gradient-title)",
+            filter: "drop-shadow(var(--shadow-title))",
+          }}
+        >
+          Dust Protocol
+        </span>
+      </h1>
+
+      {/* main vertical menu */}
+      <nav className="absolute left-20 top-1/2 z-10 flex w-[22rem] -translate-y-1/2 flex-col md:left-28">
+        {TABS.map((t) => {
+          const active = t.id === tab;
+          return (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`group flex items-center justify-between border-b border-hud-dim/15 px-4 py-2.5 text-left transition-all ${
+                active
+                  ? "border border-hud-accent bg-black/45"
+                  : "hover:translate-x-1 hover:bg-black/30"
+              }`}
+            >
+              <span
+                className={`text-2xl font-black uppercase tracking-[0.06em] md:text-3xl ${
+                  active ? "text-hud-fg" : "text-hud-accent group-hover:text-hud-fg"
+                }`}
+                style={{ textShadow: "var(--shadow-menu-item)" }}
+              >
+                {t.label}
+              </span>
+              {t.badge && <Skull className="size-5 text-hud-fg/80" />}
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* footer user bar */}
+      <div className="absolute bottom-6 left-20 z-10 w-[28rem] md:left-28">
+        <div className="text-lg font-bold uppercase tracking-[0.1em] text-hud-fg">
+          <span className="text-hud-dim">User: </span>Operator
+        </div>
+        <div className="mt-1 flex items-center gap-3 text-[11px] uppercase tracking-[0.2em] text-hud-dim">
+          <span>
+            Lvl {rank}, Rank <span className="text-hud-accent">Elite</span>
+          </span>
+          <div className="h-1 flex-1 overflow-hidden rounded-full bg-hud-track">
+            <div className="h-full bg-hud-accent" style={{ width: `${progress}%` }} />
+          </div>
+          <span>Progression</span>
+        </div>
+        <div className="mt-2 flex items-center gap-6 text-xs uppercase tracking-[0.18em] text-hud-dim">
+          <span>
+            <span className="font-bold text-hud-fg tabular-nums">{stats.kills * 100}</span> Credits
+          </span>
+          <span>
+            <span className="font-bold text-hud-fg tabular-nums">{stats.bestScore}</span> Best Score
+          </span>
+        </div>
+      </div>
+
+      {/* panel overlay */}
+      {tab && (
+        <div className="absolute inset-y-0 right-0 z-30 flex w-full max-w-2xl flex-col border-l border-hud-accent/20 p-8 backdrop-blur-md"
+          style={{ background: "var(--menu-panel)", boxShadow: "var(--shadow-menu)" }}
+        >
+          <button
+            onClick={() => setTab(null)}
+            aria-label="Close panel"
+            className="absolute right-5 top-5 text-hud-dim transition-colors hover:text-hud-fg"
+          >
+            <X className="size-5" />
+          </button>
+          <div className="min-h-0 flex-1">
+
           {tab === "play" && (
             <Panel title="Play" subtitle="Combat — respawning sentinels">
               <p className="max-w-xl text-sm leading-relaxed text-hud-dim">
