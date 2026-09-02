@@ -77,15 +77,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Dust Protocol — Browser Arena FPS" },
+      { title: "Apex Deadzone — Browser Arena FPS" },
       {
         name: "description",
         content:
-          "Dust Protocol is a fast browser FPS: five original weapons, headshots, armor and respawning sentinels in a city-and-forest arena.",
+          "Apex Deadzone is a fast browser FPS: five original weapons, headshots, armor and respawning sentinels in a city-and-forest arena.",
       },
-      { name: "author", content: "Dust Protocol" },
-      { property: "og:site_name", content: "Dust Protocol" },
-      { property: "og:title", content: "Dust Protocol — Browser Arena FPS" },
+      { name: "author", content: "Apex Deadzone" },
+      { property: "og:site_name", content: "Apex Deadzone" },
+      { property: "og:title", content: "Apex Deadzone — Browser Arena FPS" },
       {
         property: "og:description",
         content:
