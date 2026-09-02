@@ -1,22 +1,35 @@
 import { useState } from "react";
 import {
+  Home,
+  Volume2,
+  Music,
+  MessageSquare,
+  Settings as SettingsIcon,
+  LogOut,
+  Menu as MenuIcon,
+  BarChart3,
+  Skull,
+  X,
+} from "lucide-react";
+import {
   DEFAULT_SETTINGS,
   useGame,
   type Settings,
 } from "../../game/store";
 import { WEAPONS, WEAPON_ORDER, type WeaponId } from "../../game/weapons";
 import { Lobby } from "./Lobby";
+import menuHero from "../../assets/menu-hero.jpg";
 
 type Tab = "play" | "practice" | "multiplayer" | "loadout" | "settings" | "controls" | "stats";
 
-const TABS: { id: Tab; label: string; hint: string }[] = [
-  { id: "play", label: "Play", hint: "Deploy into the scrapyard" },
-  { id: "practice", label: "Practice", hint: "Slow targets, no pressure" },
-  { id: "multiplayer", label: "Multiplayer", hint: "Private rooms, live sync" },
+const TABS: { id: Tab; label: string; hint: string; badge?: boolean }[] = [
+  { id: "play", label: "Campaign", hint: "Deploy into the scrapyard" },
+  { id: "multiplayer", label: "Multiplayer", hint: "Private rooms, live sync", badge: true },
+  { id: "practice", label: "Practice Range", hint: "Slow targets, no pressure" },
   { id: "loadout", label: "Loadout", hint: "Primary & sidearm" },
+  { id: "stats", label: "Progression", hint: "Career record" },
   { id: "settings", label: "Settings", hint: "Aim, view, audio" },
   { id: "controls", label: "Controls", hint: "Key bindings" },
-  { id: "stats", label: "Statistics", hint: "Career record" },
 ];
 
 const CONTROLS: [string, string][] = [
@@ -32,6 +45,7 @@ const CONTROLS: [string, string][] = [
   ["Q", "Quick swap"],
   ["Esc", "Release cursor / menu"],
 ];
+
 
 function Panel({
   title,
