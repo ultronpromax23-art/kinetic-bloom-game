@@ -250,7 +250,7 @@ export function HUD({ onResume }: { onResume: () => void }) {
         <div className="pointer-events-auto absolute inset-0 flex items-center justify-center bg-black/72 backdrop-blur-sm">
           <div className="max-w-lg px-8 text-center">
             <h1 className="text-5xl font-black uppercase tracking-[0.14em] text-hud-accent">
-              {phase === "dead" ? "You were terminated" : "Dust Protocol"}
+              {phase === "dead" ? "You were terminated" : "Apex Deadzone"}
             </h1>
             <p className="mt-3 text-sm leading-relaxed tracking-wide text-hud-dim">
               {phase === "dead"

@@ -259,7 +259,7 @@ export function MainMenu({ onDeploy }: { onDeploy: () => void }) {
             filter: "drop-shadow(var(--shadow-title))",
           }}
         >
-          Dust Protocol
+          Apex Deadzone
         </span>
       </h1>
 
