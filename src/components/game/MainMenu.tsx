@@ -523,8 +523,10 @@ export function MainMenu({ onDeploy }: { onDeploy: () => void }) {
               </button>
             </Panel>
           )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
+
